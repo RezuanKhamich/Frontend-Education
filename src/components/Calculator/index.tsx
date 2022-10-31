@@ -1,34 +1,44 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 
 export const Calculator = () => {
   const [fieldValue, setFieldValue] = useState('');
+  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+  const operations = ['-', '+', '/', '*']
 
-  const clickHandler = (event: React.MouseEvent<HTMLElement>): void => {
-    console.log(event)
-    setFieldValue(prev => prev + event.currentTarget)
+  const clickHandler = (event: any): void => {
+      setFieldValue(prev => prev + event.target.textContent)
   }
+
+  const resultHandler = () => {
+    try {
+      const result = eval(fieldValue)
+      setFieldValue(result)
+    } catch (e) {
+      setFieldValue('error')
+    }
+  }
+
+  useEffect(() => {
+    console.log('вызывается при любой отрисовке компонента')
+  })
+
+  useEffect(() => {
+    console.log('вызывается один раз при первичной отрисовке компонента')
+  }, [])
+
+  useEffect(() => {
+    console.log('вызывается при изменении fieldValue')
+  }, [fieldValue])
 
   return (
       <div>
         <input type="text" value={fieldValue}/>
         <div>
-          <button>+</button>
-          <button>-</button>
-          <button>/</button>
-          <button>*</button>
-          <button>=</button>
+          { operations.map((el, index) => <button key={index} onClick={clickHandler}>{el}</button>) }
         </div>
+        <button onClick={resultHandler}>=</button>
         <div>
-          <button onClick={clickHandler}>1</button>
-          <button>2</button>
-          <button>3</button>
-          <button>4</button>
-          <button>5</button>
-          <button>6</button>
-          <button>7</button>
-          <button>8</button>
-          <button>9</button>
-          <button>0</button>
+          { numbers.map((el, index) => <button key={index} onClick={clickHandler}>{el}</button>) }
         </div>
       </div>
   )
